@@ -7,11 +7,13 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100px;
+    height: 90px;
     padding: 0 24px;    
-    border: white;
+    border-bottom: 1px white;
 } 
-
+html{
+    scroll-behavior: smooth;
+}
 .titulo {
     display: flex;
     align-items: center;
@@ -29,6 +31,7 @@ header{
     color: white;
     font-size: 40px;
     margin:0;
+    font-family: "Cinzel",serif;
 }
 
 nav{
@@ -37,7 +40,6 @@ nav{
     gap:24px;
     margin-left: auto;
     margin-right: 15%;
-
 }
 
 nav a{
@@ -45,6 +47,8 @@ nav a{
     font-size: 20px;
     text-decoration: none;
     transition: 0.3s;
+    display: inline-block;
+    font-family: "Montserrat", sans-serif;
 }
 
 nav a:hover{
