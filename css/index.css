@@ -1,0 +1,53 @@
+body{
+    margin:0;
+}
+
+header{
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    padding: 0 24px;    
+    border: white;
+} 
+
+.titulo {
+    display: flex;
+    align-items: center;
+    gap:10px;
+    height: 100%;  
+    margin-left: 15%;
+    
+}
+.titulo img{
+    height:80px;
+    width: auto;
+    display: block;
+}
+.titulo h1{
+    color: white;
+    font-size: 40px;
+    margin:0;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    gap:24px;
+    margin-left: auto;
+    margin-right: 15%;
+
+}
+
+nav a{
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+nav a:hover{
+    color: gray;
+      transform: translateY(-3px);
+}
