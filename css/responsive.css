@@ -26,6 +26,16 @@
     nav a {
         font-size: 18px;
     }
+
+    .footer-main {
+        width: min(100% - 32px, var(--content-width));
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
+
+    .footer-middle {
+        display: none;
+    }
 }
 
 @media (max-width: 600px) {
@@ -79,6 +89,31 @@
         min-width: 130px;
         font-size: 18px;
         padding: 8px 0;
+        text-align: center;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr;
+        padding: 40px 0;
+        text-align: center;
+    }
+
+    .footer-logo {
+        justify-content: center;
+        font-size: 24px;
+    }
+
+    .footer-logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .footer-contact {
+        align-items: center;
+    }
+
+    .footer-bottom p {
+        width: min(100% - 32px, var(--content-width));
         text-align: center;
     }
 }

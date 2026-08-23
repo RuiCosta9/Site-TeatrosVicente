@@ -1,0 +1,33 @@
+:root {
+    --color-bg: #ffffff;
+    --color-surface: #000000;
+    --color-text: #111111;
+    --color-text-inverted: #ffffff;
+    --color-muted: #808080;
+    --color-border-soft: rgba(255, 255, 255, 0.2);
+
+    --font-heading: "Cinzel", serif;
+    --font-body: "Montserrat", sans-serif;
+
+    --header-height: 90px;
+    --content-width: 1200px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+}
+
+img {
+    max-width: 100%;
+}

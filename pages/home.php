@@ -2,6 +2,7 @@
 $pageTitle = 'TeatroSVicente';
 $activePage = 'home';
 $basePath = '../';
+$pageCss = ['home.css'];
 
 require_once __DIR__ . '/../templates/header.php';
 ?>
