@@ -4,6 +4,7 @@
     height: clamp(360px, 58vw, 680px);
     overflow: hidden;
     background-color: #111111;
+    touch-action: pan-y;
 }
 
 .slideshow-track,
@@ -12,18 +13,22 @@
     height: 100%;
 }
 
+.slideshow-track {
+    display: flex;
+    transition: transform 0.55s ease;
+    will-change: transform;
+}
+
+.slideshow-track.is-dragging {
+    transition: none;
+}
+
 .slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 0;
-    transition: opacity 0.9s ease-in-out;
+    position: relative;
+    flex: 0 0 100%;
 }
 
 .slide.is-active {
-    opacity: 1;
-    pointer-events: auto;
     z-index: 1;
 }
 
@@ -32,6 +37,8 @@
     height: 100%;
     display: block;
     object-fit: cover;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .slide-overlay,
@@ -81,8 +88,14 @@
     background-color: rgba(0, 0, 0, 0.42);
     color: var(--color-text-inverted);
     cursor: pointer;
+    opacity: 1;
     transform: translateY(-50%);
-    transition: background-color 0.25s, border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    transition: background-color 0.25s, border-color 0.25s, box-shadow 0.25s, opacity 0.35s, transform 0.25s;
+}
+
+.hero-slideshow.is-interacting .slide-arrow {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .slide-arrow:hover,

@@ -28,7 +28,7 @@ $safeBasePath = htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8');
 <body id="topo">
     <header>
         <div class="titulo">
-            <a href="#topo">
+            <a href="<?= $safeBasePath ?>pages/home.php">
                 <img src="<?= $safeBasePath ?>img/pfp.jpg" alt="logo">
             </a>
             <h1>TeatroSVicente</h1>
@@ -41,7 +41,7 @@ $safeBasePath = htmlspecialchars($basePath, ENT_QUOTES, 'UTF-8');
         </button>
 
         <nav id="main-nav">
-            <a href="<?= $safeBasePath ?>pages/home.php" class="<?= $activePage === 'home' ? 'active' : '' ?>">Main</a>
+            <a href="<?= $safeBasePath ?>pages/home.php" class="<?= $activePage === 'home' ? 'active' : '' ?>">Início</a>
             <a href="<?= $safeBasePath ?>pages/contactos.php" class="<?= $activePage === 'contactos' ? 'active' : '' ?>">Contactos</a>
             <a href="<?= $safeBasePath ?>pages/agenda.php" class="<?= $activePage === 'agenda' ? 'active' : '' ?>">Agenda</a>
         </nav>
