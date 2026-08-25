@@ -23,6 +23,7 @@ if (slideshow) {
     let trackPosition = 1;
     let dragStartX = null;
     let dragStartY = null;
+    let dragStartTime = null;
     let dragDistance = 0;
     let isDragging = false;
     let isTransitioning = false;
@@ -131,14 +132,30 @@ if (slideshow) {
         });
     });
 
+    document.addEventListener('keydown', (event) => {
+        const isEditableElement = event.target instanceof HTMLElement && (
+            event.target.isContentEditable ||
+            ['INPUT', 'TEXTAREA', 'SELECT'].includes(event.target.tagName)
+        );
+
+        if (isEditableElement || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) {
+            return;
+        }
+
+        event.preventDefault();
+        showSlide(activeSlide + (event.key === 'ArrowRight' ? 1 : -1));
+        startAutoplay();
+    });
+
     slideshow.addEventListener('pointerdown', (event) => {
-        if (event.target.closest('button') || isTransitioning) {
+        if (event.pointerType === 'mouse' || event.target.closest('button') || isTransitioning) {
             return;
         }
 
         clearInterval(autoplayTimer);
         dragStartX = event.clientX;
         dragStartY = event.clientY;
+        dragStartTime = event.timeStamp;
         dragDistance = 0;
         isDragging = true;
         slideshow.classList.add('is-interacting');
@@ -160,14 +177,20 @@ if (slideshow) {
     });
 
     slideshow.addEventListener('pointerup', (event) => {
-        if (!isDragging || dragStartX === null || dragStartY === null) {
+        if (!isDragging || dragStartX === null || dragStartY === null || dragStartTime === null) {
             return;
         }
 
         const distanceX = event.clientX - dragStartX;
         const distanceY = event.clientY - dragStartY;
+        const dragDuration = Math.max(event.timeStamp - dragStartTime, 1);
+        const horizontalVelocity = Math.abs(distanceX) / dragDuration;
         const dragThreshold = slideshow.clientWidth * 0.4;
-        const shouldChangeSlide = Math.abs(distanceX) >= dragThreshold && Math.abs(distanceX) > Math.abs(distanceY);
+        const isHorizontalGesture = Math.abs(distanceX) > Math.abs(distanceY);
+        const isFastSwipe = Math.abs(distanceX) >= 25 && horizontalVelocity >= 0.5;
+        const shouldChangeSlide = isHorizontalGesture && (
+            Math.abs(distanceX) >= dragThreshold || isFastSwipe
+        );
 
         isDragging = false;
 
@@ -183,6 +206,7 @@ if (slideshow) {
 
         dragStartX = null;
         dragStartY = null;
+        dragStartTime = null;
         dragDistance = 0;
         startAutoplay();
     });
@@ -204,6 +228,7 @@ if (slideshow) {
 
         dragStartX = null;
         dragStartY = null;
+        dragStartTime = null;
         dragDistance = 0;
     });
 
