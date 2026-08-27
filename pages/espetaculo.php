@@ -11,6 +11,9 @@ $slug = isset($_GET['slug']) && is_string($_GET['slug'])
     : '';
 $production = null;
 $performances = [];
+$creativeCredits = [];
+$castCredits = [];
+$galleries = [];
 
 if ($slug !== '' && strlen($slug) <= 220) {
     $stmt = $pdo->prepare(
@@ -27,10 +30,62 @@ if ($slug !== '' && strlen($slug) <= 220) {
             'SELECT performance_date, performance_time, venue, city, address, notes
              FROM performances
              WHERE production_id = :production_id
+               AND performance_date >= CURDATE()
              ORDER BY performance_date ASC, performance_time ASC'
         );
         $performancesStmt->execute(['production_id' => $production['id']]);
         $performances = $performancesStmt->fetchAll();
+
+        $creditsStmt = $pdo->prepare(
+            'SELECT pe.name, pc.role, pc.credit_type
+             FROM production_credits AS pc
+             INNER JOIN people AS pe ON pe.id = pc.person_id
+             WHERE pc.production_id = :production_id
+             ORDER BY pc.display_order ASC'
+        );
+        $creditsStmt->execute(['production_id' => $production['id']]);
+
+        foreach ($creditsStmt->fetchAll() as $credit) {
+            if ($credit['credit_type'] === 'creative') {
+                $creativeCredits[] = $credit;
+            } elseif ($credit['credit_type'] === 'cast') {
+                $castCredits[] = $credit;
+            }
+        }
+
+        $galleriesStmt = $pdo->prepare(
+            'SELECT g.id AS gallery_id,
+                    g.title AS gallery_title,
+                    g.description AS gallery_description,
+                    p.id AS photo_id,
+                    p.file_path,
+                    p.caption,
+                    p.alt_text,
+                    p.photographer,
+                    p.sort_order,
+                    p.is_cover
+             FROM galleries AS g
+             LEFT JOIN photos AS p ON p.gallery_id = g.id
+             WHERE g.production_id = :production_id
+             ORDER BY g.id ASC, p.sort_order ASC'
+        );
+        $galleriesStmt->execute(['production_id' => $production['id']]);
+
+        foreach ($galleriesStmt->fetchAll() as $galleryRow) {
+            $galleryId = $galleryRow['gallery_id'];
+
+            if (!isset($galleries[$galleryId])) {
+                $galleries[$galleryId] = [
+                    'title' => $galleryRow['gallery_title'],
+                    'description' => $galleryRow['gallery_description'],
+                    'photos' => [],
+                ];
+            }
+
+            if ($galleryRow['photo_id'] !== null) {
+                $galleries[$galleryId]['photos'][] = $galleryRow;
+            }
+        }
     }
 }
 
@@ -146,6 +201,90 @@ require_once __DIR__ . '/../templates/header.php';
                                         <?php endif; ?>
                                     </div>
                                 </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <?php if ($creativeCredits): ?>
+                    <section class="production-credits" aria-labelledby="creative-credits-title">
+                        <h3 id="creative-credits-title">Ficha Artística</h3>
+
+                        <div class="credits-list">
+                            <?php foreach ($creativeCredits as $credit): ?>
+                                <div class="credit-item">
+                                    <h4><?= htmlspecialchars($credit['role'], ENT_QUOTES, 'UTF-8') ?></h4>
+                                    <p><?= htmlspecialchars($credit['name'], ENT_QUOTES, 'UTF-8') ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <?php if ($castCredits): ?>
+                    <section class="production-credits" aria-labelledby="cast-credits-title">
+                        <h3 id="cast-credits-title">Elenco</h3>
+
+                        <div class="credits-list">
+                            <?php foreach ($castCredits as $credit): ?>
+                                <div class="credit-item">
+                                    <h4><?= htmlspecialchars($credit['role'], ENT_QUOTES, 'UTF-8') ?></h4>
+                                    <p><?= htmlspecialchars($credit['name'], ENT_QUOTES, 'UTF-8') ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endif; ?>
+
+                <?php if ($galleries): ?>
+                    <section class="production-galleries" aria-labelledby="galleries-title">
+                        <h3 id="galleries-title">Galeria</h3>
+
+                        <div class="gallery-list">
+                            <?php foreach ($galleries as $gallery): ?>
+                                <?php $hasDescription = trim((string) $gallery['description']) !== ''; ?>
+                                <section class="gallery-group">
+                                    <h4><?= htmlspecialchars($gallery['title'], ENT_QUOTES, 'UTF-8') ?></h4>
+
+                                    <?php if ($hasDescription): ?>
+                                        <p class="gallery-description"><?= nl2br(htmlspecialchars($gallery['description'], ENT_QUOTES, 'UTF-8')) ?></p>
+                                    <?php endif; ?>
+
+                                    <?php if ($gallery['photos']): ?>
+                                        <div class="gallery-grid">
+                                            <?php foreach ($gallery['photos'] as $photo): ?>
+                                                <?php
+                                                $hasCaption = trim((string) $photo['caption']) !== '';
+                                                $hasPhotographer = trim((string) $photo['photographer']) !== '';
+                                                $altText = trim((string) $photo['alt_text']);
+
+                                                if ($altText === '') {
+                                                    $altText = $hasCaption ? $photo['caption'] : $gallery['title'];
+                                                }
+
+                                                $imageUrl = $basePath . ltrim($photo['file_path'], '/');
+                                                ?>
+                                                <figure class="gallery-photo">
+                                                    <img
+                                                        src="<?= htmlspecialchars($imageUrl, ENT_QUOTES, 'UTF-8') ?>"
+                                                        alt="<?= htmlspecialchars($altText, ENT_QUOTES, 'UTF-8') ?>"
+                                                        loading="lazy"
+                                                    >
+                                                    <?php if ($hasCaption || $hasPhotographer): ?>
+                                                        <figcaption>
+                                                            <?php if ($hasCaption): ?>
+                                                                <p><?= htmlspecialchars($photo['caption'], ENT_QUOTES, 'UTF-8') ?></p>
+                                                            <?php endif; ?>
+                                                            <?php if ($hasPhotographer): ?>
+                                                                <p class="gallery-photographer"><?= htmlspecialchars($photo['photographer'], ENT_QUOTES, 'UTF-8') ?></p>
+                                                            <?php endif; ?>
+                                                        </figcaption>
+                                                    <?php endif; ?>
+                                                </figure>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </section>
                             <?php endforeach; ?>
                         </div>
                     </section>

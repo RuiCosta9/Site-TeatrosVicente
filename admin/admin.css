@@ -1,0 +1,242 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: #f2f2f2;
+    color: #111111;
+    font-family: "Montserrat", sans-serif;
+}
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 20px max(24px, calc((100% - 1100px) / 2));
+    background: #000000;
+    color: #ffffff;
+}
+
+.admin-brand {
+    color: #ffffff;
+    font-family: "Cinzel", serif;
+    font-size: 22px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-nav a {
+    padding: 9px 13px;
+    border: 1px solid transparent;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+    border-color: #ffffff;
+}
+
+.admin-main {
+    width: min(100% - 48px, 1100px);
+    margin: 0 auto;
+    padding: 64px 0 80px;
+}
+
+.admin-page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.admin-page-heading h1,
+.admin-card h1 {
+    margin: 0;
+    font-family: "Cinzel", serif;
+    font-size: clamp(30px, 5vw, 46px);
+}
+
+.admin-card {
+    padding: 36px;
+    border-top: 5px solid #000000;
+    background: #ffffff;
+}
+
+.admin-card > p {
+    margin: 16px 0 0;
+    color: #666666;
+}
+
+.admin-button {
+    display: inline-block;
+    padding: 11px 16px;
+    border: 1px solid #000000;
+    background: #000000;
+    color: #ffffff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.admin-button:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+.admin-button--secondary {
+    background: #ffffff;
+    color: #000000;
+}
+
+.admin-button--secondary:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    border-top: 5px solid #000000;
+    background: #ffffff;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 16px;
+    border-bottom: 1px solid #dddddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.admin-table th {
+    background: #fafafa;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.admin-actions a {
+    color: #111111;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-message {
+    margin: 0 0 24px;
+    padding: 14px 16px;
+    border-left: 4px solid #000000;
+    background: #ffffff;
+}
+
+.admin-message--error {
+    background: #f4dddd;
+}
+
+.admin-form {
+    display: grid;
+    gap: 22px;
+}
+
+.admin-field label,
+.admin-field legend {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-field input[type="text"],
+.admin-field input[type="number"],
+.admin-field textarea,
+.admin-field select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #aaaaaa;
+    background: #ffffff;
+    font: inherit;
+}
+
+.admin-field textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.admin-field textarea.admin-description {
+    min-height: 220px;
+}
+
+.admin-field input:focus,
+.admin-field textarea:focus,
+.admin-field select:focus {
+    outline: 2px solid #000000;
+    outline-offset: 1px;
+}
+
+.admin-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-checkbox input {
+    width: 18px;
+    height: 18px;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 8px;
+}
+
+.admin-empty {
+    padding: 28px;
+    border-top: 5px solid #000000;
+    background: #ffffff;
+}
+
+@media (max-width: 700px) {
+    .admin-header,
+    .admin-page-heading,
+    .admin-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-nav {
+        flex-wrap: wrap;
+    }
+
+    .admin-main {
+        width: min(100% - 32px, 1100px);
+        padding: 44px 0 60px;
+    }
+
+    .admin-card {
+        padding: 24px;
+    }
+}
